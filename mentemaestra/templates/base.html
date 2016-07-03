@@ -1,0 +1,75 @@
+{% load staticfiles %}<!DOCTYPE html>
+<html lang="en" ng-app>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <meta name="description" content="{% block description %}{% endblock %}" />
+    <meta name="keywords" content="{% block keywords %}{% endblock %}" />
+    <meta name="viewport" content="{% block viewport %}width=device-width"{% endblock %}>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>{% block title %}Mentemaestra{% endblock title %}</title>
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="icon" type="image/gif" href="{% static 'img/favicon.gif' %}">
+
+    {% block css %}
+    
+      <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+    
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    {% endblock %}
+
+  </head>
+
+  <body>
+    
+    <nav class="navbar navbar-fixed-top navbar-dark bg-inverse">
+      <a class="navbar-brand" href="/">Mentemaestra</a>
+      <ul class="nav navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Contact</a>
+        </li>
+      </ul>
+    </nav>
+    
+    <div class="container">
+      {% block content %}
+      
+      <div class="starter-template">
+          <h1>Mentemaestra base template</h1>
+          <p class="lead">Use this document as a way to quick start any new project.</p>
+      </div>
+      
+      {% endblock content %}
+    </div> <!-- /container -->
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    {% block javascript %}
+    
+      <!-- Latest JQuery -->
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+      <!-- Tether - a requirement for Bootstrap tooltips -->
+      <script src="//cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/js/tether.min.js"></script>
+
+      <!-- Latest compiled and minified JavaScript -->
+      <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
+    
+      <script src="{% static 'js/scripts.js' %}"></script>
+    {% endblock javascript %}
+  </body>
+</html>
