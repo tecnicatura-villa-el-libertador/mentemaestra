@@ -4,34 +4,35 @@ from django.db import models
 
 class Partida(models.Model):
 
-	turno_de=models.CharField(max_length=20)
-	ID= models.CharField(max_lenght=10)
-	Estado(Registrando,Jugando,Terminado)=models.TextField()
-	
+        turno_de=models.ForeignKey(Jugador)
+        participantes=models.ManytoManyField("participante", related_nombre="partidas")
+    
+        estado=models.Charfield(max_length=25, choices=(("Registrando", "Registrando")("Jugando", "Jugando"), ("Finalizado","Finalizado")))
+    
 
-	def __str__(self):
-        return "{} ({})".format(self.turno_de, self.ID, self.Estado)
+        def __str__(self):
+            return "{} ({})".format(self.turno_de, self.estado)
 
 class Jugador(models.Model):
-	
-	ID=models.IntegerField()
-	nombre=models.Charfield(max_lenght=15)
-	incognita=models.IntegerField()
-	activo=models.BoolField(CheckboxInput)
+    
+        ID=models.IntegerField()
+        nombre=models.Charfield(max_lenght=15)
+        incognita=models.PositiveIntegerField()
+        activo=models.BoolField(CheckboxInput)
 
-	def __str__(self):
-        return "{} ({})".format(self.nombre, self.incognita)
+        def __str__(self):
+            return "{} ({})".format(self.nombre, self.incognita)
 
 class Jugada(models.Model):
-	
-	ronda=models.IntegerField()
-	apuesta=models.CharField()
-	bien=models.IntegerField()
-	regular=models.IntegerField()
-	
+    
+        ronda=models.IntegerField()
+        apuesta=models.CharField()
+        bien=models.IntegerField()
+        regular=models.IntegerField()
+    
 
-	def __str__(self):
-        return "{} ({})".format(self.ronda, self.apuesta self.bien self.regular)
+        def __str__(self):
+            return "{} ({})".format(self.ronda, self.apuesta self.bien self.regular)
 
 
-	
+    
