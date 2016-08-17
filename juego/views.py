@@ -1,3 +1,4 @@
+
 from django.shortcuts import render, redirect
 from .forms import IngreseNumero, Registrar
 from juego.models import Jugada, Partida, Jugador
@@ -77,4 +78,5 @@ def registrar(request, partida_id):
          'form': form,
         })
     
+
 
