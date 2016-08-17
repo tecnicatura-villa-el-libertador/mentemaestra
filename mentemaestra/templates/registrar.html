@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+
+<h1>Inscriptos hasta este momento:</h1>
+
+<TABLE>
+<TR>
+<TH>Nombre de Jugador</TH>
+</TR>
+{% for jugador in jugadores %}
+	<TR>
+	<TD>{{ jugador.nombre }}</TD>
+	</TR>
+{% endfor %}
+</TABLE>
+
+
+<form action="" method="post">
+
+{% csrf_token %}
+{{ form }}
+<br><input type="submit" name="registrar" value="Registrar jugador" class="btn"></input>
+<input type="submit" name="comenzar" value="Registrar y comenzar esta partida!" class="btn btn-success"></input>
+
+{% endblock %}
