@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+
+<table class="table table-stripped">
+<TR>
+<TH>ronda</TH>
+<TH>Nombre de Jugador</TH><TH>Numero</TH><TH>Aciertos</TH><TH>Coicidencia</TH>
+</TR>
+{% for jugada in jugadas %}
+<TR>
+<TD>{{jugada.ronda}}</TD>
+<TD>{{ jugada.jugador.nombre }}</TD><TD>{{jugada.apuesta}}</TD><TD>{{jugada.bien}}</TD><TD>{{jugada.regular}}</TD>
+</TR>
+{% endfor %}
+</TABLE>
+
+
+<form action="" method="post">
+<h3>Turno de {{ partida.turno_de.nombre }}</h3>
+{% csrf_token %}
+{{ form }}
+<br><b>{{mensaje}} </b> 
+
+<br><input type="submit" value="enviar">
+
+</input>
+
+{% endblock %}

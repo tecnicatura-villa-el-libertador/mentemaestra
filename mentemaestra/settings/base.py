@@ -64,7 +64,7 @@ DATABASES = {
 
 # Internationalization
 
-LANGUAGE_CODE = 'es'
+LANGUAGE_CODE = 'es-AR'
 
 TIME_ZONE = 'UTC'
 
