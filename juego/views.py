@@ -25,6 +25,9 @@ def jugar(request, partida_id):
             try:
                 partida.turno_de = participantes[participantes.index(jugador) + 1]
             except IndexError:
+
+                jugada=Jugada.objects.filter(ronda=ronda, partida=partida, bien=4)
+
                 partida.ronda = partida.ronda + 1
                 partida.turno_de = participantes[0]
             
