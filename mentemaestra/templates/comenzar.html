@@ -18,11 +18,8 @@
 <TD>{{ jugada.jugador.nombre }}</TD><TD>{{jugada.apuesta}}</TD><TD>{{jugada.bien}}</TD><TD>{{jugada.regular}}</TD>
 </TR>
 {% if jugada.bien == 4 %}
-<BODY BGCOLOR="#CCFFFF">
-
 <TD colspan="5"> <p align="center"> ¡¡¡EL GANADOR DE LA RONDA ES  {{ jugada.jugador.nombre }} !!!</p></TD> 
 {% endif %}
-</BODY >
 {% endfor %}
 </TABLE>
 
