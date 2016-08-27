@@ -1,8 +1,9 @@
-
 from django.shortcuts import render, redirect
-from .forms import IngreseNumero, Registrar
+from .forms import IngreseNumero, Registrar, Elegir
 from juego.models import Jugada, Partida, Jugador
 from .mastermind import evaluar, crear_numero
+import random, string
+
 
 
 def jugar(request, partida_id):
@@ -42,14 +43,32 @@ def jugar(request, partida_id):
         })
 
 def inicio(request):
-    if request.method == 'POST':
         partida = Partida.objects.create()
-        return redirect('registro/{}'.format(partida.id))
-    return render(request, 'inicio.html', {})    
+        if request.method == 'POST':
+            form = Elegir(request.POST)
+            if form.is_valid():
+                privado = form.cleaned_data['privado']
+                if privado == True:
+                    partida.privado = privado
+                    partida.codigo = ''.join(random.sample(string.ascii_letters, 8))
+                    partida.save()
+                    return redirect('registro/{}'.format(partida.codigo))
+            else: 
+                return redirect('registro/{}'.format(partida.id))
+        else:
+            form = Elegir()
+            return render(request, 'inicio.html',
+            {
+             'form': form,
+             })    
 
 
-def registrar(request, partida_id):
-    partida = Partida.objects.get(id=partida_id)
+def registrar(request, id):
+    #conprueba si es un mumero
+    if id.isdigit():
+        partida = Partida.objects.get(id=id)
+    else:
+        partida = Partida.objects.get(codigo=id)
     jugadores = partida.participantes.all()
     if request.method == 'POST':
 
@@ -67,7 +86,7 @@ def registrar(request, partida_id):
             
             if 'comenzar' in request.POST:
                 # apretaron el boton verde para comenzar el juego
-                return redirect('jugar', partida_id=partida_id)
+                return redirect('jugar', partida_id=id)
             return redirect('/registro/{}'.format(partida.id))
 
     else: 
@@ -78,5 +97,4 @@ def registrar(request, partida_id):
          'form': form,
         })
     
-
 
