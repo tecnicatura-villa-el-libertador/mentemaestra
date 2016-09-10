@@ -8,5 +8,7 @@ urlpatterns = [
     url(r'^registro/(?P<id>[a-zA-Z]+)$', registrar, name='privado'),
     url(r'^registro/(?P<id>[0-9]+)$', registrar, name='registro'),
 
-    url(r'^partida/(?P<partida_id>[0-9]+)$', jugar, name='jugar'),
+    url(r'^partida/(?P<id>[0-9]+)$', jugar, name='jugar'),
+    url(r'^partida/(?P<id>[a-zA-Z]+)$', jugar, name='jugar'),
+
 ]

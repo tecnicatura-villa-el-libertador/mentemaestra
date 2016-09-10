@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import IngreseNumero, Registrar, Elegir
 from juego.models import Jugada, Partida, Jugador
 from .mastermind import evaluar, crear_numero
@@ -6,9 +6,14 @@ import random, string
 
 
 
-def jugar(request, partida_id):
-    jugadas = Jugada.objects.filter(partida__id=partida_id)
-    partida = Partida.objects.get(id=partida_id)
+def jugar(request, id):
+    id_o_codigo = id
+    if id.isdigit():
+        partida = get_object_or_404(Partida, id=id_o_codigo, privado=False)
+    else:
+        partida = get_object_or_404(Partida, codigo=id_o_codigo)
+
+    jugadas = Jugada.objects.filter(partida=partida)
             
     if request.method == 'POST':
         form= IngreseNumero(request.POST)
@@ -31,7 +36,7 @@ def jugar(request, partida_id):
             
             partida.save()
 
-            return redirect('jugar', partida_id=partida_id)
+            return redirect('jugar', id=id_o_codigo)
     else: 
         form= IngreseNumero()
     return render(request, 'comenzar.html', 
@@ -41,6 +46,7 @@ def jugar(request, partida_id):
          'partida': partida
         
         })
+
 
 def inicio(request):
         partida = Partida.objects.create()
@@ -64,11 +70,12 @@ def inicio(request):
 
 
 def registrar(request, id):
+    id_o_codigo = id
     #conprueba si es un mumero
     if id.isdigit():
-        partida = Partida.objects.get(id=id)
+        partida = get_object_or_404(Partida, id=id_o_codigo, privado=False)
     else:
-        partida = Partida.objects.get(codigo=id)
+        partida = get_object_or_404(Partida, codigo=id_o_codigo)
     jugadores = partida.participantes.all()
     if request.method == 'POST':
 
@@ -86,8 +93,8 @@ def registrar(request, id):
             
             if 'comenzar' in request.POST:
                 # apretaron el boton verde para comenzar el juego
-                return redirect('jugar', partida_id=id)
-            return redirect('/registro/{}'.format(partida.id))
+                return redirect('jugar', id=id_o_codigo)
+            return redirect('/registro/{}'.format(id_o_codigo))
 
     else: 
         form= Registrar()
