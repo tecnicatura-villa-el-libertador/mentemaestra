@@ -10,7 +10,7 @@ def verificar(numero):
     return True
 
 class IngreseNumero(forms.Form):
-	numero = forms.CharField(label="ingrese numero", max_length = 4)
+	numero = forms.CharField(widget=forms.NumberInput(attrs={'autofocus':'autofocus'}), label="ingrese numero", max_length = 4)
 
 	def clean_numero(self):
 		numero = self.cleaned_data['numero']

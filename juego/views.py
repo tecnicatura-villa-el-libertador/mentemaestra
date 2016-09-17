@@ -6,9 +6,9 @@ from .mastermind import evaluar, crear_numero
 
 
 def jugar(request, partida_id):
-    jugadas = Jugada.objects.filter(partida__id=partida_id)
+    jugadas = Jugada.objects.filter(partida__id=partida_id).order_by('-id')
     partida = Partida.objects.get(id=partida_id)
-            
+    jugadas_ganadoras = []        
     if request.method == 'POST':
         form= IngreseNumero(request.POST)
         #validar=verificar(numero)
@@ -20,28 +20,36 @@ def jugar(request, partida_id):
             jugada = Jugada.objects.create(jugador=jugador, 
                 partida=partida, apuesta=apuesta, bien=bien, 
                 regular=regular, ronda=ronda)
-            participantes = list(partida.participantes.all())
+
+
+            participantes = list(partida.participantes.filter(activo=True))
             print("turno de", partida.turno_de)
             try:
                 partida.turno_de = participantes[participantes.index(jugador) + 1]
             except IndexError:
-
-                jugada=Jugada.objects.filter(ronda=ronda, partida=partida, bien=4)
-
+                
                 partida.ronda = partida.ronda + 1
                 partida.turno_de = participantes[0]
-            
+                
             partida.save()
 
+            if bien == 4:
+                jugador.activo = False
+                jugador.save()
+
+           
             return redirect('jugar', partida_id=partida_id)
     else: 
+
+        jugadas_ganadoras = Jugada.objects.filter(partida=partida, bien=4)
+
         form= IngreseNumero()
     return render(request, 'comenzar.html', 
         {
         'jugadas':jugadas,
          'form': form,
-         'partida': partida
-        
+         'partida': partida,
+         'jugadas_ganadoras':jugadas_ganadoras,        
         })
 
 def inicio(request):
@@ -80,6 +88,5 @@ def registrar(request, partida_id):
         'jugadores':jugadores,
          'form': form,
         })
-    
 
 
