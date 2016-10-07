@@ -13,8 +13,8 @@ def jugar(request, id):
     else:
         partida = get_object_or_404(Partida, codigo=id_o_codigo)
 
-    jugadas = Jugada.objects.filter(partida=partida)
-            
+    jugadas = Jugada.objects.filter(partida=partida).order_by('-id')
+    jugadas_ganadoras = []
     if request.method == 'POST':
         form= IngreseNumero(request.POST)
         #validar=verificar(numero)
@@ -23,31 +23,39 @@ def jugar(request, id):
             apuesta = form.cleaned_data["numero"]
             bien, regular = evaluar(apuesta, jugador.incognita)
             ronda = partida.ronda
-            jugada = Jugada.objects.create(jugador=jugador, 
-                partida=partida, apuesta=apuesta, bien=bien, 
+            jugada = Jugada.objects.create(jugador=jugador,
+                partida=partida, apuesta=apuesta, bien=bien,
                 regular=regular, ronda=ronda)
-            participantes = list(partida.participantes.all())
+
+
+            participantes = list(partida.participantes.filter(activo=True))
             print("turno de", partida.turno_de)
             try:
                 partida.turno_de = participantes[participantes.index(jugador) + 1]
             except IndexError:
 
-                jugada=Jugada.objects.filter(ronda=ronda, partida=partida, bien=4)
-
                 partida.ronda = partida.ronda + 1
                 partida.turno_de = participantes[0]
-            
+
             partida.save()
 
+            if bien == 4:
+                jugador.activo = False
+                jugador.save()
+
+
             return redirect('jugar', id=id_o_codigo)
-    else: 
+    else:
+
+        jugadas_ganadoras = Jugada.objects.filter(partida=partida, bien=4)
+
         form= IngreseNumero()
-    return render(request, 'comenzar.html', 
+    return render(request, 'comenzar.html',
         {
         'jugadas':jugadas,
          'form': form,
-         'partida': partida
-        
+         'partida': partida,
+         'jugadas_ganadoras':jugadas_ganadoras,
         })
 
 
@@ -62,14 +70,14 @@ def inicio(request):
                     partida.codigo = ''.join(random.sample(string.ascii_letters, 8))
                     partida.save()
                     return redirect('registro/{}'.format(partida.codigo))
-            else: 
+            else:
                 return redirect('registro/{}'.format(partida.id))
         else:
             form = Elegir()
             return render(request, 'inicio.html',
             {
              'form': form,
-             })    
+             })
 
 
 def registrar(request, id):
@@ -83,28 +91,29 @@ def registrar(request, id):
     if request.method == 'POST':
 
         form= Registrar(request.POST)
-        if form.is_valid():
-            nombre = form.cleaned_data['nombre']
-            incognita = crear_numero()
-            jugador = Jugador.objects.create(nombre=nombre, 
-                incognita=incognita, activo=True)
-            if partida.participantes.count() == 0:
-                # el primer turno es del primer registrado
-                partida.turno_de = jugador
-                partida.save() 
-            partida.participantes.add(jugador)
-            
-            if 'comenzar' in request.POST:
-                # apretaron el boton verde para comenzar el juego
-                return redirect('jugar', id=id_o_codigo)
-            return redirect('/registro/{}'.format(id_o_codigo))
+        if 'comenzar' in request.POST:
+            # apretaron el boton verde para comenzar el juego
+            return redirect('jugar', id=id_o_codigo)
+        else:
 
-    else: 
-        form= Registrar()
-    return render(request, 'registrar.html', 
+            if form.is_valid():
+                nombre = form.cleaned_data['nombre']
+                incognita = crear_numero()
+                jugador = Jugador.objects.create(nombre=nombre,
+                    incognita=incognita, activo=True)
+                if partida.participantes.count() == 0:
+                    # el primer turno es del primer registrado
+                    partida.turno_de = jugador
+                    partida.save()
+                partida.participantes.add(jugador)
+
+                return redirect('/registro/{}'.format(id_o_codigo))
+
+    else:
+        form = Registrar()
+    return render(request, 'registrar.html',
         {
         'jugadores':jugadores,
          'form': form,
         })
-    
 

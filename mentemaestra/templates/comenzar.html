@@ -4,6 +4,17 @@
 
 
 <br><br><br>
+
+<form action="" method="post">
+<h3>Turno de {{ partida.turno_de.nombre }}</h3>
+{% csrf_token %}
+{{ form }}
+<br><b>{{mensaje}} </b>
+
+<br><input type="submit" value="enviar">
+
+</form>
+
 <table class="table table-stripped">
 <TR>
 <TH>ronda</TH>
@@ -14,17 +25,16 @@
 <TD>{{jugada.ronda}}</TD>
 <TD>{{ jugada.jugador.nombre }}</TD><TD>{{jugada.apuesta}}</TD><TD>{{jugada.bien}}</TD><TD>{{jugada.regular}}</TD>
 </TR>
-{% if jugada.bien == 4 %}
-<TD colspan="5"> <p align="center"> ¡¡¡EL GANADOR DE LA RONDA ES  {{ jugada.jugador.nombre }} !!!</p></TD> 
+{% if jugadas_ganadoras %}
+	{% for jugada_ganadora in jugadas_ganadoras %}
+
+	<TD colspan="5"> <p align="center"> ¡¡¡HAY GANADORES EN LA RONDA:
+	{{ jugada_ganadora.jugador.nombre }}
+
+	{% endfor %}
+ </p></TD>
 {% endif %}
 {% endfor %}
 </TABLE>
-
-<form action="" method="post">
-<h3>Turno de {{ partida.turno_de.nombre }}</h3>
-{% csrf_token %}
-{{ form }}
-<br><input type="submit" value="enviar">
-</input>
 
 {% endblock %}

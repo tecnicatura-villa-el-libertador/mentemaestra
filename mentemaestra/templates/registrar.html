@@ -26,6 +26,9 @@
 {% csrf_token %}
 {{ form }}
 <br><input type="submit" name="registrar" value="Registrar jugador" class="btn"></input>
-<input type="submit" name="comenzar" value="Registrar y comenzar esta partida!" class="btn btn-success"></input>
+
+{% if jugadores.count > 0 %}
+	<input type="submit" name="comenzar" value="Comenzar esta partida!" class="btn btn-success"></input>
+{% endif %}
 
 {% endblock %}
