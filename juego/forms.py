@@ -20,3 +20,9 @@ class IngreseNumero(forms.Form):
 
 class Registrar(forms.Form):
     nombre = forms.CharField(label="ingrese nombre", max_length = 15)
+
+class Elegir(forms.Form):
+    privado = forms.BooleanField(label="privado")
+    
+
+
